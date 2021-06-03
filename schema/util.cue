@@ -1,7 +1,7 @@
 package pollyschema
 
 import (
-    "github.com/grafana/grafana/cue/scuemata"
+	"github.com/grafana/grafana/cue/scuemata"
 )
 
 _latest: {

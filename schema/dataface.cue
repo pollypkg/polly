@@ -27,29 +27,29 @@ package pollyschema
 // TODO elaborate on exactly how it's expected that datafaces get consumed.
 // Necessarily an extension of how signals get consumed.
 Dataface: {
-    name: string
-    // TODO regex-constrain frame name to alphanumeric
-    // TODO this is where additional type constraints on the signal would be expressed
-    frames: [string]: Signal 
+	name: string
+	// TODO regex-constrain frame name to alphanumeric
+	// TODO this is where additional type constraints on the signal would be expressed
+	frames: [string]: Signal
 }
 
 // TODO just having dataface specifications - in contrast to implementations -
 // be free-hanging like this is antithetical to the key goal of referencing them
 // in polly pkg implementations
 RED: Dataface & {
-    name: "RED"
-    frames: {
-        requests: Signal
-        errors: Signal
-        duration: Signal
-    }
+	name: "RED"
+	frames: {
+		requests: Signal
+		errors:   Signal
+		duration: Signal
+	}
 }
 
 USE: Dataface & {
-    name: "USE"
-    frames: {
-        utilization: Signal
-        saturation: Signal
-        errors: Signal
-    }
+	name: "USE"
+	frames: {
+		utilization: Signal
+		saturation:  Signal
+		errors:      Signal
+	}
 }

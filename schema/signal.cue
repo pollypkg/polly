@@ -7,13 +7,13 @@ package pollyschema
 //
 // It is intended that return typing will be added in the future.
 Signal: {
-    // The name of the signal. TODO constrain with regex
+	// The name of the signal. TODO constrain with regex
 	name: string
-    // lang indicates the language in which the query is written.
-    lang: string
-    // params is the set of parameters taken by the signal.
+	// lang indicates the language in which the query is written.
+	lang: string
+	// params is the set of parameters taken by the signal.
 	params: {...}
-    // query is the actual query string, including parameter variables that
-    // need to be interpolated.
+	// query is the actual query string, including parameter variables that
+	// need to be interpolated.
 	query: string
 }
