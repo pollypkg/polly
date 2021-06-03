@@ -14,9 +14,9 @@ This repository contains the polly specification [itself](https://github.com/pol
 
 ## Vision
 
-All systems need observability. That starts with emitting telemetry data. But raw data alone isn’t enough. There’s a set of steps - roughly: collect, transform, interpret, act - through which data passes that are necessary for software to be not merely observable, but _observed_ by real, actual humans. These steps are the collective responsibility of an overall observability platform, driven by many interrelated bits of configuration.
+All systems need observability. That starts with emitting telemetry data. But raw data alone isn’t enough. There’s a set of steps - roughly: collect, transform, interpret, act - through which data passes that are necessary for software to be not merely observable, but _observed_ by real, actual humans. These steps are the collective responsibility of an observability platform, driven by many interrelated bits of configuration.
 
-Of course, as software evolves, so too must the configuration that allows it to be observed. By nature, software and its observers are companions. Today’s tooling, however, makes that co-evolution quite friction-ful and error-prone. That’s what polly aims to change - no matter how you ship software, your observability can ride sidecar. We believe that achieving this has the potential to make observability go truly mainstream, much as testing has over the last decade.
+Of course, as software evolves, so too must the configuration that allows it to be observed. By nature, software and its observers are companions, but today’s tooling makes their co-evolution friction-ful and error-prone. That’s what polly aims to change - no matter how you ship software, your observability can ride sidecar. We believe that achieving this is necessary for observability to go truly mainstream, much as testing has over the last decade.
 
 ## Using Polly
 
