@@ -30,7 +30,9 @@ Dataface: {
 	name: string
 	// TODO regex-constrain frame name to alphanumeric
 	// TODO this is where additional type constraints on the signal would be expressed
-	frames: [string]: Signal
+	// TODO if the referenced signal is a string, need a constraint ensuring the
+	// signal exists (no using other polly packages' signals, for now)
+	frames: [string]: Signal | string
 }
 
 // TODO just having dataface specifications - in contrast to implementations -
@@ -39,17 +41,17 @@ Dataface: {
 RED: Dataface & {
 	name: "RED"
 	frames: {
-		requests: Signal
-		errors:   Signal
-		duration: Signal
+		requests: Signal | string
+		errors:   Signal | string
+		duration: Signal | string
 	}
 }
 
 USE: Dataface & {
 	name: "USE"
 	frames: {
-		utilization: Signal
-		saturation:  Signal
-		errors:      Signal
+		utilization: Signal | string
+		saturation:  Signal | string
+		errors:      Signal | string
 	}
 }

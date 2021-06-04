@@ -11,17 +11,41 @@ examplepkg: pollyschema.PollyPackage & {
 		params: {}
 	}
 	signals: [
+		// Number of CPUs the node has
 		{
-			"NumCpu": {
-				params: {job: string, instance: string}
-				lang: "promql"
-				expr: "count without (cpu) (count without (mode) (node_cpu_seconds_total{job=\"\(args.job)\", instance=\"\(args.instance)\"}))"
-			}
+			name: "NumCpu"
+			lang: "promql"
+			params: {job: string, instance: string}
+			query: "count without (cpu) (count without (mode) (node_cpu_seconds_total{job=\"\(args.job)\", instance=\"\(args.instance)\"}))"
+		},
+		// Amount of memory currently in use
+		{
+			name: "MemoryUtilization"
+			lang: "promql"
+			params: {job: string, instance: string}
+			query: "1 - (node_memory_MemAvailable_bytes{job=\"\(args.job)\", instance=\"\(args.instance)\"} / node_memory_MemTotal_bytes{job=\"\(args.job)\", instance=\"\(args.instance)\"})"
+		},
+		// One minute rate of major page faults
+		{
+			name: "VmstatPGMajFault"
+			lang: "promql"
+			params: {job: string, instance: string}
+			query: "rate(node_vmstat_pgmajfault{job=\"\(args.job)\", instance=\"\(args.instance)\"}[1m])"
 		},
 	]
 
-	// NOTE examples here are gonna be pretty broken until we have
-	// a reliable Grafana schema
+	datafaces: {
+		"use_mem": pollyschema.USE & {
+			frames: {
+				utilization: "MemoryUtilization"
+				saturation:  "VmstatPGMajFault"
+				errors:      "" // NOTE omitting/empty string for this would be an error
+			}
+		}
+	}
+
+	// NOTE examples here are gonna be pretty broken/artificial until we have a
+	// reliable Grafana schema
 	grafanaDashboards: v0: nodedashboard: {
 		uid: "a8b327a" // Define the uid that Grafana will internally use to uniquely identify the dashboard
 
