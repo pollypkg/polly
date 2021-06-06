@@ -59,7 +59,6 @@ PollyPackage: {
 	//
 	// @doc(metaschema)
 	grafanaDashboards?: {
-		// v0: type map[string]grafana.LatestDashboardType
 		v0?: [string]: (_latest & {arg: grafana.Family.lineages[0]}).out
 	}
 
