@@ -1,0 +1,12 @@
+name: ci
+on:
+  - push
+  - pull_request
+jobs:
+  fmt:
+    name: Format
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-go@v2
+    - run: go install cuelang.org/go/cmd/cue@latest
+    - run: find . -name '*.cue' -o -path cue.mod -prune -exec cue fmt {} \;
