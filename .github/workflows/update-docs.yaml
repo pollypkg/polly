@@ -1,0 +1,24 @@
+name: update docs 
+on:
+  # enable manual trigger button in github actions web
+  workflow_dispatch:
+  # enable auto trigger based on both path and branch
+  push:
+    # only main branch
+    branches:
+      - main
+    # at least one changed file must match this path
+    paths:
+      - 'docs/**'
+jobs:
+  build:
+    name: build and deploy docs as GitHub page
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout master
+        uses: actions/checkout@v2
+      - name: Deploy docs
+        uses: mhausenblas/mkdocs-deploy-gh-pages@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CONFIG_FILE: docs/mkdocs.yml

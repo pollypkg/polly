@@ -16,21 +16,21 @@ examplepkg: pollyschema.PollyPackage & {
 			name: "NumCpu"
 			lang: "promql"
 			params: {job: string, instance: string}
-			query: "count without (cpu) (count without (mode) (node_cpu_seconds_total{job=\"\(args.job)\", instance=\"\(args.instance)\"}))"
+			query: "count without (cpu) (count without (mode) (node_cpu_seconds_total{job=\"\(params.job)\", instance=\"\(params.instance)\"}))"
 		},
 		// Amount of memory currently in use
 		{
 			name: "MemoryUtilization"
 			lang: "promql"
 			params: {job: string, instance: string}
-			query: "1 - (node_memory_MemAvailable_bytes{job=\"\(args.job)\", instance=\"\(args.instance)\"} / node_memory_MemTotal_bytes{job=\"\(args.job)\", instance=\"\(args.instance)\"})"
+			query: "1 - (node_memory_MemAvailable_bytes{job=\"\(params.job)\", instance=\"\(params.instance)\"} / node_memory_MemTotal_bytes{job=\"\(params.job)\", instance=\"\(params.instance)\"})"
 		},
 		// One minute rate of major page faults
 		{
 			name: "VmstatPGMajFault"
 			lang: "promql"
 			params: {job: string, instance: string}
-			query: "rate(node_vmstat_pgmajfault{job=\"\(args.job)\", instance=\"\(args.instance)\"}[1m])"
+			query: "rate(node_vmstat_pgmajfault{job=\"\(params.job)\", instance=\"\(params.instance)\"}[1m])"
 		},
 	]
 
