@@ -3,7 +3,7 @@
 Polly is a specification for parameterized packages of observability-related
 configuration objects such as dashboards, alerts and [more][targets].
 
-Wit polly packages we intend to address the fundamental challenges involved
+With polly packages we intend to address the fundamental challenges involved
 in keeping observability systems in sync with the systems they're intended to
 observe, addressing question including but not limited to:
 
