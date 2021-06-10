@@ -1,0 +1,45 @@
+site_name: 'polly'
+site_author: 'polly authors'
+copyright: 'Copyright &copy; polly community 2021'
+repo_name: 'pollypkg/polly'
+repo_url: 'https://github.com/pollypkg/polly/'
+docs_dir: 'content'
+nav:
+- Home:
+  - index.md
+- 'Community':
+  - community.md
+  - lifecycle.md
+  - vision.md
+  - contrib.md
+- 'Usage':
+  - usage.md
+  - basics.md
+  - faq.md
+theme:
+  name: 'material'
+  features:
+    - navigation.instant
+    - navigation.tabs
+  icon:
+    logo: 'fontawesome/solid/cube'
+  font:
+    text: 'Lato'
+    code: 'PT Mono'
+  palette:
+    scheme: slate
+    primary: cyan
+    accent: pink
+  highlightjs: true
+  hljs_languages:
+  - yaml
+  - json
+  - bash
+markdown_extensions:
+- toc:
+    permalink: true
+- admonition
+- codehilite:
+    linenums: true
+- pymdownx.details
+- pymdownx.superfences
