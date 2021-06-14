@@ -1,6 +1,6 @@
 # Contributing
 
-Polly uses GitHub for [discussions](https://github.com/pollypkg/polly/discussions) and pull requests. In this early phase, there are a few different avenues looking for contributions in the following areas:
+Polly uses GitHub for [discussions](https://github.com/pollypkg/polly/discussions) and pull requests. In this early phase, there are a few different key ways to contribute:
 
 1. [Writing test cases/examples](#Exploration-by-example)
 2. [Spec development](#Specification-development)
@@ -23,6 +23,8 @@ If you want to give this a shot, here's a procedure:
 5. Look at other examples to see how the pop is structured and how to use the various object types.
 6. Create your own! If you're adapting an existing mixin, it's easiest to pick out some subset of the objects to copy over. Consider taking notes about what you're thinking as you go through.
 7. [Send a PR with your pop, using this template!]() It's got questions to help guide your response. (It may be worth reading the questions beforehand to help guide your note-taking.)
+
+NOTE: for new CUE-ers, [there are tutorials](https://cuelang.org/docs/tutorials/); worth spending some time on, and the [play site](https://tip.cuelang.org/play/?id=#cue@export@cue) is a great testing sandbox.
 
 Example pops may eventually mature to the point where they're moved out into their own repositories/wherever makes sense. For now, this keeps all the attention in one place, which is good for maximizing learning!
 

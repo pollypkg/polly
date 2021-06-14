@@ -26,7 +26,7 @@ e.g. etcd, kubernetes, ceph, linux node via Prometheus node exporter
 
 #### How did you decide whether it was worth making particular queries into reusable signals?
 
-#### Which part of the polly spec was most confusing to work with? If you figured it out, what did you see that helpd you figure it out?
+#### Which part of the polly spec was most confusing to work with? If you figured it out, what helped you get there?
 
 #### Is there anything about observing the SUO that the polly schema did not allow you to express in the pop?
 
