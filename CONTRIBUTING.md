@@ -22,7 +22,7 @@ If you want to give this a shot, here's a procedure:
 4. Pick some generally sensible name for the pop, based on the system you intend to observe. Create a directory with that name under [`examples/`](https://github.com/pollypkg/polly/tree/main/examples).
 5. Look at other examples to see how the pop is structured and how to use the various object types.
 6. Create your own! If you're adapting an existing mixin, it's easiest to pick out some subset of the objects to copy over. Consider taking notes about what you're thinking as you go through.
-7. [Send a PR with your pop, using this template!]() It's got questions to help guide your response. (It may be worth reading the questions beforehand to help guide your note-taking.)
+7. Send a PR with your pop! We have a [template](https://raw.githubusercontent.com/pollypkg/polly/main/.github/PULL_REQUEST_TEMPLATE/explore_example.md) with questions to help guide your response. Unfortunately, having multiple PR templates doesn't work well; you can manually append `?template=example_explore.md` to the PR URL, or the [`gh` CLI](https://cli.github.com/manual/installation) tool will give you a choice when running `gh pr create`.
 
 NOTE: for new CUE-ers, [there are tutorials](https://cuelang.org/docs/tutorials/); worth spending some time on, and the [play site](https://tip.cuelang.org/play/?id=#cue@export@cue) is a great testing sandbox.
 
