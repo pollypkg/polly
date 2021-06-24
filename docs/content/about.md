@@ -16,7 +16,7 @@ apparent.
 
 These shortcomings led to a desire to improve on the existing work on Mixins,
 resulting in what we now know as polly. Initially simply called Mixins-NG, 
-the work around polly kicked off publickly in [April 2021][polly-kickoff], with
+the work around polly kicked off publicly in [April 2021][polly-kickoff], with
 Sam Boyer's mail to the newly created Mixins mailing list. 
 
 At that point, Sam already had been working on the concept and core formalization
