@@ -28,7 +28,7 @@ At this point, polly doesn't have a formal governance body or rule set, but
 we do have:
 
 * A guide on how to [contribute][contrib] to polly.
-* The commitment that polly and the artefacts in the organization are available
+* The commitment that polly and the artifacts in the organization are available
   under Apache License Version 2.0 and will continue to be so.
 
 For any questions or suggestions, we ask you to use the [polly project
