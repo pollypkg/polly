@@ -1,7 +1,7 @@
 # About
 
 With polly, we're building on the shoulder of giants, or in other words: this
-is not the first attempt to make o11y tooling templating work. It all started out in
+is not the first attempt to make observability tooling templating work. It all started out in
 04/2018 with Frederic Branczyk proposing [Jsonnet Package Management][jpm]
 which was further on adopted in several places such as [Prometheus Monitoring
 Mixins][prom-mixins] which had the tagline:
