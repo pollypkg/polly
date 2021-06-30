@@ -34,7 +34,7 @@ we do have:
 For any questions or suggestions, we ask you to use the [polly project
 discussion][discussion] section in the main repo.
 
-_Sam, Matthias, Michael_
+_sam, Matthias, Michael_
 
 [jpm]: https://docs.google.com/document/d/1czRScSvvOiAJaIjwf3CogOULgQxhY9MkiBKOQI1yR14/
 [prom-mixins]: https://monitoring.mixins.dev/
