@@ -86,7 +86,7 @@ PollyPackage: {
 	prometheusRules?: {
 		v0?: [string]: {
 			group: string
-			rule: (_latest & {arg: prometheus.Alert.lineages[0]}).out & {
+			rule: (_latest & {arg: prometheus.Rule.lineages[0]}).out & {
 			}
 		}
 	}
