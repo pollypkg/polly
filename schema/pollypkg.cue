@@ -67,10 +67,6 @@ PollyPackage: {
 	//
 	// @doc(metaschema)
 	prometheusAlerts?: {
-		v0?: [string]: (_latest & {arg: prometheus.Alert.lineages[0]}).out
-	}
-
-	prometheusAlerts?: {
 		v0?: [Name=string]: {
 			group: string
 			alert: (_latest & {arg: prometheus.Alert.lineages[0]}).out & {
