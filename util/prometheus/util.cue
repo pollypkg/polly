@@ -20,12 +20,12 @@ import "list"
 //   }
 #FlattenAlerts: {
     arg: [string]: { group: string, alert: {...} }
-    result: [string]: [...]
+    out: [string]: [...]
     _inter: [string]: [string]: {...}
     for n, v in arg {
         _inter: "\(v.group)": "\(n)": v.alert
     }
     for g, a in _inter {
-        result: "\(g)": [ for v in a {v}, ...]
+        out: "\(g)": [ for v in a {v}, ...]
     }
 }
