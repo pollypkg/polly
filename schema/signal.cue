@@ -2,8 +2,8 @@ package pollyschema
 
 // A Signal is a named, parameterized query.
 //
-// Each signal is expressed in exactly query language - e.g. PromQL, ANSI SQL,
-// LogQL, CQL, GraphQL, etc.
+// Each signal is expressed in exactly one query language - e.g. PromQL, ANSI
+// SQL, LogQL, CQL, GraphQL, etc.
 //
 // It is intended that return typing will be added in the future.
 Signal: {
