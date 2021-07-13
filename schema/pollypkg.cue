@@ -67,7 +67,12 @@ PollyPackage: {
 	//
 	// @doc(metaschema)
 	prometheusAlerts?: {
-		v0?: [string]: (_latest & {arg: prometheus.Alert.lineages[0]}).out
+		v0?: [Name=string]: {
+			group: string
+			alert: (_latest & {arg: prometheus.Alert.lineages[0]}).out & {
+				alert: Name
+			}
+		}
 	}
 
 	// prometheusRules contains definitions of Prometheus rules that are
@@ -75,6 +80,10 @@ PollyPackage: {
 	//
 	// @doc(metaschema)
 	prometheusRules?: {
-		v0?: [string]: (_latest & {arg: prometheus.Rule.lineages[0]}).out
+		v0?: [string]: {
+			group: string
+			rule: (_latest & {arg: prometheus.Rule.lineages[0]}).out & {
+			}
+		}
 	}
 }
