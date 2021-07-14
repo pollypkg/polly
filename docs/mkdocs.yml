@@ -1,5 +1,7 @@
 site_name: 'polly'
 site_author: 'polly authors'
+site_url: 'https://pollypkg.github.io/polly/'
+# use_directory_urls: False
 copyright: 'Copyright &copy; polly community 2021'
 repo_name: 'pollypkg/polly'
 repo_url: 'https://github.com/pollypkg/polly/'
