@@ -16,6 +16,7 @@ type Pop struct {
 	ctx *cue.Context
 }
 
+// New constructs a pop from a cue.Value
 func New(v cue.Value) *Pop {
 	return &Pop{v: v, ctx: v.Context()}
 }
@@ -40,6 +41,7 @@ func Load(path string) (*Pop, error) {
 	return New(v), nil
 }
 
+// Value returns the underlying cue.Value
 func (p Pop) Value() cue.Value {
 	return p.v
 }
