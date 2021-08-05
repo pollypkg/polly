@@ -65,6 +65,10 @@ func (p Pop) Mixin() (*Mixin, error) {
 		return nil, mixed.Err()
 	}
 
+	if err := mixed.Validate(cue.Concrete(true)); err != nil {
+		return nil, err
+	}
+
 	mixin := mixer.LookupPath(cue.ParsePath("mixin"))
 
 	m := Mixin{

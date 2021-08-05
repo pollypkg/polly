@@ -29,9 +29,9 @@ func mixCmd() *cli.Command {
 		var out interface{} = mix
 		switch *system {
 		case "alerts":
-			out = mix.PrometheusAlerts
+			out = map[string]interface{}{"groups": mix.PrometheusAlerts}
 		case "rules":
-			out = mix.PrometheusRules
+			out = map[string]interface{}{"groups": mix.PrometheusRules}
 		case "grafana":
 			out = mix.GrafanaDashboards
 		}
