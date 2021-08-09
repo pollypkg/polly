@@ -17,6 +17,7 @@ func main() {
 
 	cmd.AddCommand(
 		mixCmd(),
+		editCmd(),
 	)
 
 	if err := cmd.Execute(); err != nil {
