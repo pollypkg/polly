@@ -6,20 +6,28 @@ import (
 
 	"github.com/go-clix/cli"
 	"github.com/pollypkg/polly/pkg/api/grafana"
+	"github.com/pollypkg/polly/pkg/edit"
+	"github.com/pollypkg/polly/pkg/pop"
 )
 
 func editCmd() *cli.Command {
 	cmd := &cli.Command{
 		Use:   "edit <path> [resource]",
 		Short: "interactive editing session",
-		Args:  cli.ArgsRange(1, 2),
+		Args:  cli.ArgsMin(1),
 	}
 
 	cmd.Run = func(cmd *cli.Command, args []string) error {
-		// p, err := pop.Load(args[0])
-		// if err != nil {
-		// 	return err
-		// }
+		p, err := pop.Load(args)
+		if err != nil {
+			return err
+		}
+
+		if err := edit.Check(*p); err != nil {
+			return err
+		}
+
+		return nil
 
 		c, err := grafana.New("http://localhost:3000", grafana.Auth{
 			Token: "eyJrIjoieEpyUTl4SUQ4ZVBGaWlGT0RleHhvYlZrRmxLZmo4d24iLCJuIjoidGVzdCIsImlkIjoxfQ==",

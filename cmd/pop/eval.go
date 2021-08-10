@@ -9,14 +9,14 @@ func mixCmd() *cli.Command {
 	cmd := &cli.Command{
 		Use:   "mix <path>",
 		Short: "output pop in mixin compatible format",
-		Args:  cli.ArgsExact(1),
+		Args:  cli.ArgsMin(1),
 	}
 
 	printer := cmd.Flags().StringP("output", "o", "json", "output format. One of json, yaml")
 	system := cmd.Flags().StringP("system", "s", "", "choose subsystem. One of alerts, rules, grafana (default all)")
 
 	cmd.Run = func(cmd *cli.Command, args []string) error {
-		p, err := pop.Load(args[0])
+		p, err := pop.Load(args)
 		if err != nil {
 			return err
 		}

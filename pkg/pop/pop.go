@@ -22,10 +22,10 @@ func New(v cue.Value) *Pop {
 }
 
 // Load a polly package from disk
-func Load(path string) (*Pop, error) {
-	inst := load.Instances([]string{path}, nil)
+func Load(paths []string) (*Pop, error) {
+	inst := load.Instances(paths, nil)
 	if len(inst) != 1 {
-		return nil, fmt.Errorf("polly requires exactly one instance. Found %d at '%s'", len(inst), path)
+		return nil, fmt.Errorf("polly requires exactly one instance. Found %d at '%s'", len(inst), paths)
 	}
 
 	ctx := cuecontext.New()
