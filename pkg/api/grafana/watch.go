@@ -20,7 +20,7 @@ type Watcher struct {
 	auth Auth
 }
 
-func (c *Client) Watcher() (*Watcher, error) {
+func (c *Client) NewWatcher() (*Watcher, error) {
 	i, err := c.Info()
 	if err != nil {
 		return nil, err
@@ -54,7 +54,7 @@ func (c *Client) Watcher() (*Watcher, error) {
 	return &w, nil
 }
 
-type ChangeHandler func(interface{}) error
+type ChangeHandler func(map[string]interface{}) error
 
 func (w *Watcher) Add(uid string, handler ChangeHandler) error {
 	channel := fmt.Sprintf("%d/grafana/dashboard/uid/%s", w.auth.OrgID, uid)
@@ -99,6 +99,10 @@ func (w *Watcher) Del(uid string) {
 
 	s.Close()
 	delete(w.subs, uid)
+}
+
+func (w *Watcher) Err() error {
+	return <-w.e
 }
 
 func (w *Watcher) Close() error {

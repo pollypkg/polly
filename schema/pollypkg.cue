@@ -58,16 +58,16 @@ PollyPackage: {
 	// valid with respect to Grafana dashboard scuemata specifications.
 	//
 	// @doc(metaschema)
-	grafanaDashboards?: {
-		v0?: [string]: (_latest & {arg: grafana.Family.lineages[0]}).out
+	grafanaDashboards: {
+		v0: [string]: (_latest & {arg: grafana.Family.lineages[0]}).out
 	}
 
 	// prometheusAlerts contains definitions of Prometheus alerts that are
 	// valid with respect to Prometheus alert scuemata specifications.
 	//
 	// @doc(metaschema)
-	prometheusAlerts?: {
-		v0?: [Name=string]: {
+	prometheusAlerts: {
+		v0: [Name=string]: {
 			group: string
 			alert: (_latest & {arg: prometheus.Alert.lineages[0]}).out & {
 				alert: Name
@@ -79,8 +79,8 @@ PollyPackage: {
 	// valid with respect to Prometheus rule scuemata specifications.
 	//
 	// @doc(metaschema)
-	prometheusRules?: {
-		v0?: [string]: {
+	prometheusRules: {
+		v0: [string]: {
 			group: string
 			rule: (_latest & {arg: prometheus.Rule.lineages[0]}).out & {
 			}

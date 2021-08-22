@@ -90,3 +90,9 @@ type Mixin struct {
 	PrometheusRules   []interface{}     `json:"prometheusRules"`
 	PrometheusAlerts  []interface{}     `json:"prometheusAlerts"`
 }
+
+// boom acts like panic specifcally for errors, that must not happen, because
+// schema guarantees should have prevented them.
+func boom(i interface{}) {
+	panic(i)
+}

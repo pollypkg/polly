@@ -54,6 +54,10 @@ func New(baseURL string, auth Auth) (*Client, error) {
 	return c, nil
 }
 
+func (c *Client) API() *grafana.Client {
+	return c.gapi
+}
+
 func (c *Client) Info() (*Info, error) {
 	u := *c.url
 	u.Path = path.Join(u.Path, "api", "health")

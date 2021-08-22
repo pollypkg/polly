@@ -2,30 +2,22 @@ package edit
 
 import (
 	"fmt"
-	"path/filepath"
-	"strings"
 
 	"cuelang.org/go/cue"
 	"cuelang.org/go/cue/cuecontext"
 	"cuelang.org/go/cue/load"
-	"cuelang.org/go/cue/token"
 	"github.com/pollypkg/polly/pkg/pop"
 )
 
 // Check reports whether this pop can be edited
 func Check(p pop.Pop) error {
-	dashboards := p.Value().LookupPath(cue.ParsePath("grafanaDashboards.v0"))
-	i, err := dashboards.Fields()
-	if err != nil {
-		return err
-	}
-	for i.Next() {
-		f, err := ValueFile(i.Value())
+	for _, d := range p.Dashboards() {
+		f, err := File(d)
 		if err != nil {
 			return err
 		}
 
-		if err := containsOnly(f, i.Value().Path()); err != nil {
+		if err := containsOnly(f, d.Value().Path()); err != nil {
 			return err
 		}
 	}
@@ -89,73 +81,4 @@ func (e ErrorNotSole) Error() string {
 	}
 	s += "Editing requires dashboards to be in their separate files"
 	return s
-}
-
-// ValueFile reports the file a value originates from.
-// It expects values to originate from _exactly one_ file.
-// The polly schema is ignored
-func ValueFile(v cue.Value) (string, error) {
-	split := v.Split()
-
-	pos := make([]token.Pos, len(split))
-	for i, s := range split {
-		pos[i] = s.Pos()
-	}
-
-	if len(split) == 0 {
-		panic("shouldn't happen. figure out why")
-	}
-
-	if len(split) == 1 {
-		return pos[0].Filename(), nil
-	}
-
-	if len(split) > 2 {
-		return "", ErrMultipleFiles{pos: pos, name: v.Path().String()}
-	}
-
-	var file string
-	for _, p := range pos {
-		// don't count our schema
-		if isSchema(p.Filename()) {
-			continue
-		}
-
-		if file != "" {
-			return "", ErrMultipleFiles{pos: pos, name: v.Path().String()}
-		}
-
-		file = p.Filename()
-	}
-
-	if file == "" {
-		panic("shouldn't happen. figure out why")
-	}
-
-	return file, nil
-}
-
-type ErrMultipleFiles struct {
-	pos  []token.Pos
-	name string
-}
-
-func (e ErrMultipleFiles) Error() string {
-	s := fmt.Sprintf("The dashboard '%s' originates from more than one non-schema file:\n", e.name)
-
-	for _, p := range e.pos {
-		s += "  - " + p.String()
-		if isSchema(p.Filename()) {
-			s += " (schema)"
-		}
-		s += "\n"
-	}
-
-	s += "Editing requires dashboards to be in their separate files"
-	return s
-}
-
-func isSchema(f string) bool {
-	// TODO: this is a very naive and weak assumption. find a better one
-	return strings.HasSuffix(filepath.ToSlash(f), "polly/schema/pollypkg.cue")
 }
