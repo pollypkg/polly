@@ -1,15 +1,18 @@
 package main
 
 import (
+	"context"
 	"crypto/sha256"
 	"encoding/base64"
 	"fmt"
 	"log"
+	"net/http"
 	"os"
 	"os/signal"
 
 	"github.com/go-clix/cli"
 	"github.com/pollypkg/polly/pkg/api/grafana"
+	"github.com/pollypkg/polly/pkg/coord"
 	"github.com/pollypkg/polly/pkg/edit"
 	"github.com/pollypkg/polly/pkg/pop"
 )
@@ -24,6 +27,9 @@ func editCmd() *cli.Command {
 	cmd.Run = func(cmd *cli.Command, args []string) error {
 		sigCh := make(chan os.Signal, 1)
 		signal.Notify(sigCh, os.Interrupt)
+
+		ctx := context.Background()
+		ctx, cancel := coord.WithCancel(ctx)
 
 		p, err := pop.Load(args)
 		if err != nil {
@@ -43,30 +49,17 @@ func editCmd() *cli.Command {
 			return err
 		}
 
-		e, err := edit.Edit(*p, edit.Opts{Client: c})
+		srv, err := edit.HTTPServer(ctx, *p, edit.Opts{Client: c})
 		if err != nil {
 			return err
 		}
 
-		dbs := p.Dashboards()
-		if len(dbs) != 1 {
-			var strs []string
-			for _, d := range dbs {
-				strs = append(strs, d.Name())
-			}
-
-			return fmt.Errorf("Editing alpha requires exactly one dashboard, found %s", strs)
-		}
-
-		if err := e.Add(dbs[0].Name()); err != nil {
-			return err
-		}
+		http.Handle("/api/v1/", http.StripPrefix("/api/v1", srv))
+		go http.ListenAndServe(":3333", nil)
 
 		<-sigCh
 		log.Println("Cleaning up ..")
-		if err := e.Close(); err != nil {
-			return err
-		}
+		cancel()
 
 		return nil
 	}

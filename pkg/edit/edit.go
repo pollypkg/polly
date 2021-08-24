@@ -28,8 +28,8 @@ func Edit(p pop.Pop, opts Opts) (*Grafana, error) {
 	g := Grafana{
 		p: p,
 
-		inEdit: make(map[string]*pop.Dashboard),
-		api:    opts.Client,
+		inEdit: make(map[string]string),
+		api:    opts.Client.API(),
 		watch:  w,
 	}
 
@@ -39,13 +39,17 @@ func Edit(p pop.Pop, opts Opts) (*Grafana, error) {
 type Grafana struct {
 	p pop.Pop
 
-	inEdit map[string]*pop.Dashboard
+	inEdit map[string]string
 
-	api   *grafana.Client
+	api   *gapi.Client
 	watch *grafana.Watcher
 }
 
 func (c Grafana) Add(name string) error {
+	if _, ok := c.inEdit[name]; ok {
+		return nil
+	}
+
 	d, err := c.p.Dashboard(name)
 	if err != nil {
 		return err
@@ -66,15 +70,15 @@ func (c Grafana) Add(name string) error {
 	i["uid"] = editUID
 	i["id"] = nil
 
-	_ = c.api.API().DeleteDashboardByUID(editUID)
-	_, err = c.api.API().NewDashboard(gapi.Dashboard{
+	_ = c.api.DeleteDashboardByUID(editUID)
+	_, err = c.api.NewDashboard(gapi.Dashboard{
 		Model: i,
 	})
 	if err != nil {
 		return err
 	}
 
-	c.inEdit[editUID] = d
+	c.inEdit[name] = editUID
 
 	err = c.watch.Add(editUID, func(i map[string]interface{}) error {
 		i["uid"] = originalUID
@@ -112,10 +116,14 @@ func (c Grafana) Add(name string) error {
 	return nil
 }
 
+func (c Grafana) EditUID(name string) string {
+	return c.inEdit[name]
+}
+
 func (c Grafana) Close() error {
 	var outErr error
-	for uid := range c.inEdit {
-		err := c.api.API().DeleteDashboardByUID(uid)
+	for _, uid := range c.inEdit {
+		err := c.api.DeleteDashboardByUID(uid)
 		if outErr == nil {
 			outErr = err
 		}
