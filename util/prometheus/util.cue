@@ -29,3 +29,35 @@ import "list"
         out: "\(g)": [ for v in a {v}, ...]
     }
 }
+
+#LabelMatcher: {
+	Label: string
+	Value: string
+	Op: "=" | "!=" | "=~" | "!=~"
+    str: "\(Label)\(Op)\"\(Value)\""
+}
+
+#LabelMatcherExact: {
+	Label: string
+	Value: string
+	Op: *"=" | "!="
+    str Label + Op + Value
+}
+
+#LabelMatcherDisjunct: {
+	Label: string
+	Value: [string, string, ...string]
+	Op: *"=~" | "!=~"
+    str: Label + Op + strings.Join(Value, "|")
+}
+
+#LabelMatcherRegex: {
+	Label: string
+	Value: string
+	Op: *"=~" | "!=~"
+    str: Label + Op + Value
+}
+
+#LabelMatcherGroup: [L=string]: #LabelMatcher & {
+	Label: L
+}
