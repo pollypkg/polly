@@ -87,14 +87,16 @@ func (c Grafana) Add(name string) error {
 
 	c.inEdit[name] = editUID
 
-	err = c.watch.Add(editUID, func(i map[string]interface{}) error {
-		i["uid"] = originalUID
-		delete(i, "id")
+	err = c.watch.Add(editUID, func(upd map[string]interface{}) error {
+		upd["uid"] = originalUID
+		delete(upd, "id")
+		delete(upd, "version")
+		trim(upd)
 
 		model := map[string]interface{}{
 			"grafanaDashboards": map[string]interface{}{
 				"v0": map[string]interface{}{
-					name: i,
+					name: upd,
 				},
 			},
 		}
@@ -170,4 +172,22 @@ func cuePackage(file string) (string, error) {
 	}
 
 	return i.PkgName, nil
+}
+
+func trim(i interface{}) {
+	switch i := i.(type) {
+	case map[string]interface{}:
+		for k, v := range i {
+			if v == nil {
+				delete(i, k)
+				continue
+			}
+
+			trim(v)
+		}
+	case []interface{}:
+		for _, v := range i {
+			trim(v)
+		}
+	}
 }

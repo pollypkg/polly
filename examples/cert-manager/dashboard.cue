@@ -13,15 +13,13 @@ grafanaDashboards: v0: CertManager: {
 			target: {
 				limit:    100
 				matchAny: false
-				tags: []
-				type: "dashboard"
+				type:     "dashboard"
 			}
 			type: "dashboard"
 		},
 	]
 	description:  ""
 	editable:     true
-	gnetId:       null
 	graphTooltip: 1
 	links: []
 	panels: [
@@ -36,7 +34,6 @@ grafanaDashboards: v0: CertManager: {
 						steps: [
 							{
 								color: "green"
-								value: null
 							},
 							{
 								color: "red"
@@ -59,7 +56,6 @@ grafanaDashboards: v0: CertManager: {
 									steps: [
 										{
 											color: "green"
-											value: null
 										},
 									]
 								}
@@ -114,7 +110,6 @@ grafanaDashboards: v0: CertManager: {
 						steps: [
 							{
 								color: "red"
-								value: null
 							},
 							{
 								color: "#EAB839"
@@ -196,7 +191,6 @@ grafanaDashboards: v0: CertManager: {
 						steps: [
 							{
 								color: "green"
-								value: null
 							},
 							{
 								color: "red"
@@ -332,15 +326,11 @@ grafanaDashboards: v0: CertManager: {
 		},
 		{
 			aliasColors: {}
-			bars:        false
-			dashLength:  10
-			dashes:      false
-			datasource:  "$datasource"
-			description: "The rate of controller sync requests."
-			fieldConfig: {
-				defaults: links: null
-				overrides: []
-			}
+			bars:         false
+			dashLength:   10
+			dashes:       false
+			datasource:   "$datasource"
+			description:  "The rate of controller sync requests."
 			fill:         1
 			fillGradient: 0
 			gridPos: {
@@ -372,10 +362,10 @@ grafanaDashboards: v0: CertManager: {
 			points:          false
 			renderer:        "flot"
 			repeatDirection: "h"
-			seriesOverrides: null
-			spaceLength:     10
-			stack:           false
-			steppedLine:     false
+			seriesOverrides: []
+			spaceLength: 10
+			stack:       false
+			steppedLine: false
 			targets: [
 				{
 					expr:         "sum by (controller) (\nrate(certmanager_controller_sync_call_count[$__rate_interval])\n)"
@@ -384,11 +374,9 @@ grafanaDashboards: v0: CertManager: {
 					refId:        "A"
 				},
 			]
-			thresholds:  null
-			timeFrom:    null
-			timeRegions: null
-			timeShift:   null
-			title:       "Controller Sync Requests/sec"
+			thresholds: []
+			timeRegions: []
+			title: "Controller Sync Requests/sec"
 			tooltip: {
 				shared:     true
 				sort:       0
@@ -396,11 +384,9 @@ grafanaDashboards: v0: CertManager: {
 			}
 			type: "graph"
 			xaxis: {
-				buckets: null
-				mode:    "time"
-				name:    null
-				show:    true
-				values:  null
+				mode: "time"
+				show: true
+				values: []
 			}
 			yaxes: [
 				{
@@ -419,15 +405,11 @@ grafanaDashboards: v0: CertManager: {
 		},
 		{
 			aliasColors: {}
-			bars:        false
-			dashLength:  10
-			dashes:      false
-			datasource:  "$datasource"
-			description: "Rate of requests to ACME provider."
-			fieldConfig: {
-				defaults: links: null
-				overrides: []
-			}
+			bars:         false
+			dashLength:   10
+			dashes:       false
+			datasource:   "$datasource"
+			description:  "Rate of requests to ACME provider."
 			fill:         1
 			fillGradient: 0
 			gridPos: {
@@ -461,10 +443,10 @@ grafanaDashboards: v0: CertManager: {
 			points:          false
 			renderer:        "flot"
 			repeatDirection: "h"
-			seriesOverrides: null
-			spaceLength:     10
-			stack:           false
-			steppedLine:     false
+			seriesOverrides: []
+			spaceLength: 10
+			stack:       false
+			steppedLine: false
 			targets: [
 				{
 					expr:         "sum by (method, path, status) (\nrate(certmanager_http_acme_client_request_count[$__rate_interval])\n)"
@@ -473,11 +455,9 @@ grafanaDashboards: v0: CertManager: {
 					refId:        "A"
 				},
 			]
-			thresholds:  null
-			timeFrom:    null
-			timeRegions: null
-			timeShift:   null
-			title:       "ACME HTTP Requests/sec"
+			thresholds: []
+			timeRegions: []
+			title: "ACME HTTP Requests/sec"
 			tooltip: {
 				shared:     true
 				sort:       0
@@ -485,46 +465,32 @@ grafanaDashboards: v0: CertManager: {
 			}
 			type: "graph"
 			xaxis: {
-				buckets: null
-				mode:    "time"
-				name:    null
-				show:    true
-				values:  null
+				mode: "time"
+				show: true
+				values: []
 			}
 			yaxes: [
 				{
 					format:  "reqps"
-					label:   null
 					logBase: 1
-					max:     null
 					min:     "0"
 					show:    true
 				},
 				{
 					format:  "short"
-					label:   null
 					logBase: 1
-					max:     null
-					min:     null
 					show:    true
 				},
 			]
-			yaxis: {
-				align:      false
-				alignLevel: null
-			}
+			yaxis: align: false
 		},
 		{
 			aliasColors: {}
-			bars:        false
-			dashLength:  10
-			dashes:      false
-			datasource:  "$datasource"
-			description: "Average duration of requests to ACME provider. "
-			fieldConfig: {
-				defaults: links: null
-				overrides: []
-			}
+			bars:         false
+			dashLength:   10
+			dashes:       false
+			datasource:   "$datasource"
+			description:  "Average duration of requests to ACME provider. "
 			fill:         1
 			fillGradient: 0
 			gridPos: {
@@ -558,10 +524,10 @@ grafanaDashboards: v0: CertManager: {
 			points:          false
 			renderer:        "flot"
 			repeatDirection: "h"
-			seriesOverrides: null
-			spaceLength:     10
-			stack:           false
-			steppedLine:     false
+			seriesOverrides: []
+			spaceLength: 10
+			stack:       false
+			steppedLine: false
 			targets: [
 				{
 					expr:         "sum by (method, path, status) (rate(certmanager_http_acme_client_request_duration_seconds_sum[$__rate_interval]))\n/\nsum by (method, path, status) (rate(certmanager_http_acme_client_request_duration_seconds_count[$__rate_interval]))"
@@ -570,11 +536,9 @@ grafanaDashboards: v0: CertManager: {
 					refId:        "A"
 				},
 			]
-			thresholds:  null
-			timeFrom:    null
-			timeRegions: null
-			timeShift:   null
-			title:       "ACME HTTP Request avg duration"
+			thresholds: []
+			timeRegions: []
+			title: "ACME HTTP Request avg duration"
 			tooltip: {
 				shared:     true
 				sort:       0
@@ -582,46 +546,32 @@ grafanaDashboards: v0: CertManager: {
 			}
 			type: "graph"
 			xaxis: {
-				buckets: null
-				mode:    "time"
-				name:    null
-				show:    true
-				values:  null
+				mode: "time"
+				show: true
+				values: []
 			}
 			yaxes: [
 				{
 					format:  "s"
-					label:   null
 					logBase: 1
-					max:     null
 					min:     "0"
 					show:    true
 				},
 				{
 					format:  "short"
-					label:   null
 					logBase: 1
-					max:     null
-					min:     null
 					show:    true
 				},
 			]
-			yaxis: {
-				align:      false
-				alignLevel: null
-			}
+			yaxis: align: false
 		},
 		{
 			aliasColors: max: "dark-yellow"
-			bars:        false
-			dashLength:  10
-			dashes:      false
-			datasource:  "$datasource"
-			description: "CPU Usage and limits, as percent of a vCPU core. "
-			fieldConfig: {
-				defaults: links: null
-				overrides: []
-			}
+			bars:         false
+			dashLength:   10
+			dashes:       false
+			datasource:   "$datasource"
+			description:  "CPU Usage and limits, as percent of a vCPU core. "
 			fill:         0
 			fillGradient: 0
 			gridPos: {
@@ -644,7 +594,6 @@ grafanaDashboards: v0: CertManager: {
 			}
 			lines:         true
 			linewidth:     1
-			links:         null
 			maxDataPoints: 250
 			nullPointMode: "null"
 			options: alertThreshold: true
@@ -703,11 +652,7 @@ grafanaDashboards: v0: CertManager: {
 					refId:          "C"
 				},
 			]
-			thresholds:  null
-			timeFrom:    null
-			timeRegions: null
-			timeShift:   null
-			title:       "CPU"
+			title: "CPU"
 			tooltip: {
 				shared:     true
 				sort:       0
@@ -715,46 +660,31 @@ grafanaDashboards: v0: CertManager: {
 			}
 			type: "graph"
 			xaxis: {
-				buckets: null
-				mode:    "time"
-				name:    null
-				show:    true
-				values:  null
+				mode: "time"
+				show: true
 			}
 			yaxes: [
 				{
 					format:  "percentunit"
-					label:   null
 					logBase: 1
-					max:     null
 					min:     "0"
 					show:    true
 				},
 				{
 					format:  "short"
-					label:   null
 					logBase: 1
-					max:     null
-					min:     null
 					show:    true
 				},
 			]
-			yaxis: {
-				align:      false
-				alignLevel: null
-			}
+			yaxis: align: false
 		},
 		{
 			aliasColors: max: "dark-yellow"
-			bars:        false
-			dashLength:  10
-			dashes:      false
-			datasource:  "$datasource"
-			description: "Percent of the time that the CPU is being throttled. Higher is badderer. "
-			fieldConfig: {
-				defaults: links: null
-				overrides: []
-			}
+			bars:         false
+			dashLength:   10
+			dashes:       false
+			datasource:   "$datasource"
+			description:  "Percent of the time that the CPU is being throttled. Higher is badderer. "
 			fill:         0
 			fillGradient: 0
 			gridPos: {
@@ -777,7 +707,6 @@ grafanaDashboards: v0: CertManager: {
 			}
 			lines:         true
 			linewidth:     1
-			links:         null
 			maxDataPoints: 250
 			nullPointMode: "connected"
 			options: alertThreshold: true
@@ -808,11 +737,7 @@ grafanaDashboards: v0: CertManager: {
 					refId:          "A"
 				},
 			]
-			thresholds:  null
-			timeFrom:    null
-			timeRegions: null
-			timeShift:   null
-			title:       "CPU Throttling"
+			title: "CPU Throttling"
 			tooltip: {
 				shared:     true
 				sort:       0
@@ -820,46 +745,31 @@ grafanaDashboards: v0: CertManager: {
 			}
 			type: "graph"
 			xaxis: {
-				buckets: null
-				mode:    "time"
-				name:    null
-				show:    true
-				values:  null
+				mode: "time"
+				show: true
 			}
 			yaxes: [
 				{
 					format:  "percentunit"
-					label:   null
 					logBase: 1
-					max:     null
 					min:     "0"
 					show:    true
 				},
 				{
 					format:  "short"
-					label:   null
 					logBase: 1
-					max:     null
-					min:     null
 					show:    true
 				},
 			]
-			yaxis: {
-				align:      false
-				alignLevel: null
-			}
+			yaxis: align: false
 		},
 		{
 			aliasColors: max: "dark-yellow"
-			bars:        false
-			dashLength:  10
-			dashes:      false
-			datasource:  "$datasource"
-			description: "Memory utilisation and limits."
-			fieldConfig: {
-				defaults: links: null
-				overrides: []
-			}
+			bars:         false
+			dashLength:   10
+			dashes:       false
+			datasource:   "$datasource"
+			description:  "Memory utilisation and limits."
 			fill:         0
 			fillGradient: 0
 			gridPos: {
@@ -882,7 +792,6 @@ grafanaDashboards: v0: CertManager: {
 			}
 			lines:         true
 			linewidth:     1
-			links:         null
 			maxDataPoints: 250
 			nullPointMode: "null"
 			options: alertThreshold: true
@@ -939,11 +848,7 @@ grafanaDashboards: v0: CertManager: {
 					refId:          "C"
 				},
 			]
-			thresholds:  null
-			timeFrom:    null
-			timeRegions: null
-			timeShift:   null
-			title:       "Memory"
+			title: "Memory"
 			tooltip: {
 				shared:     true
 				sort:       0
@@ -951,46 +856,31 @@ grafanaDashboards: v0: CertManager: {
 			}
 			type: "graph"
 			xaxis: {
-				buckets: null
-				mode:    "time"
-				name:    null
-				show:    true
-				values:  null
+				mode: "time"
+				show: true
 			}
 			yaxes: [
 				{
 					format:  "bytes"
-					label:   null
 					logBase: 1
-					max:     null
 					min:     "0"
 					show:    true
 				},
 				{
 					format:  "short"
-					label:   null
 					logBase: 1
-					max:     null
-					min:     null
 					show:    true
 				},
 			]
-			yaxis: {
-				align:      false
-				alignLevel: null
-			}
+			yaxis: align: false
 		},
 		{
 			aliasColors: max: "dark-yellow"
-			bars:        false
-			dashLength:  10
-			dashes:      false
-			datasource:  "$datasource"
-			description: "Network ingress/egress."
-			fieldConfig: {
-				defaults: links: null
-				overrides: []
-			}
+			bars:         false
+			dashLength:   10
+			dashes:       false
+			datasource:   "$datasource"
+			description:  "Network ingress/egress."
 			fill:         1
 			fillGradient: 5
 			gridPos: {
@@ -1013,7 +903,6 @@ grafanaDashboards: v0: CertManager: {
 			}
 			lines:         true
 			linewidth:     1
-			links:         null
 			nullPointMode: "null"
 			options: alertThreshold: true
 			percentage:      false
@@ -1051,11 +940,7 @@ grafanaDashboards: v0: CertManager: {
 					refId:          "B"
 				},
 			]
-			thresholds:  null
-			timeFrom:    null
-			timeRegions: null
-			timeShift:   null
-			title:       "Network"
+			title: "Network"
 			tooltip: {
 				shared:     true
 				sort:       0
@@ -1063,34 +948,22 @@ grafanaDashboards: v0: CertManager: {
 			}
 			type: "graph"
 			xaxis: {
-				buckets: null
-				mode:    "time"
-				name:    null
-				show:    true
-				values:  null
+				mode: "time"
+				show: true
 			}
 			yaxes: [
 				{
 					format:  "Bps"
-					label:   null
 					logBase: 1
-					max:     null
-					min:     null
 					show:    true
 				},
 				{
 					format:  "short"
-					label:   null
 					logBase: 1
-					max:     null
-					min:     null
 					show:    true
 				},
 			]
-			yaxis: {
-				align:      false
-				alignLevel: null
-			}
+			yaxis: align: false
 		},
 	]
 	refresh:       "1m"
@@ -1124,5 +997,4 @@ grafanaDashboards: v0: CertManager: {
 	timezone: "browser"
 	title:    "Cert Manager"
 	uid:      "TvuRo2iMk"
-	version:  2
 }
