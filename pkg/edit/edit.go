@@ -7,10 +7,12 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"strings"
 
 	gapi "github.com/grafana/grafana-api-golang-client"
 
 	"cuelang.org/go/cue/format"
+	"cuelang.org/go/cue/load"
 	"github.com/pollypkg/polly/pkg/api/grafana"
 	"github.com/pollypkg/polly/pkg/pop"
 )
@@ -65,6 +67,11 @@ func (c Grafana) Add(name string) error {
 		return err
 	}
 
+	cuePkg, err := cuePackage(file)
+	if err != nil {
+		return err
+	}
+
 	originalUID := i["uid"]
 	editUID := dashboardID(name)
 	i["uid"] = editUID
@@ -97,7 +104,11 @@ func (c Grafana) Add(name string) error {
 			panic(err)
 		}
 
-		fmted, err := format.Source(data, format.Simplify())
+		trimmed := strings.Trim(string(data), "{}")
+
+		pkged := fmt.Sprintf("package %s\n%s", cuePkg, trimmed)
+
+		fmted, err := format.Source([]byte(pkged), format.Simplify())
 		if err != nil {
 			panic(err)
 		}
@@ -149,4 +160,14 @@ func dashboardID(name string) string {
 	}
 
 	return id
+}
+
+func cuePackage(file string) (string, error) {
+	inst := load.Instances([]string{file}, nil)
+	i := inst[0]
+	if i.Err != nil {
+		return "", i.Err
+	}
+
+	return i.PkgName, nil
 }

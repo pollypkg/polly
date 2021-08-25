@@ -68,7 +68,7 @@ func (s Server) Dashboards(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var meta []DashboardMeta
+	meta := []DashboardMeta{}
 	for _, d := range s.p.Dashboards() {
 		var m DashboardMeta
 		if err := d.Value().Decode(&m); err != nil {
