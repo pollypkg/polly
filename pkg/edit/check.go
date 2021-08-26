@@ -25,6 +25,8 @@ func Check(p pop.Pop) error {
 	return nil
 }
 
+// containsOnly fails when the file contains any other values than the one at
+// path
 func containsOnly(file string, path cue.Path) error {
 	inst := load.Instances([]string{file}, nil)[0]
 
@@ -62,6 +64,10 @@ func containsOnly(file string, path cue.Path) error {
 	return nil
 }
 
+// ErrorNotSole happens when more the dashboard of given name is not the only
+// resource in the given file. We require this to be the case, so we can safely
+// overwrite CUE dashboard files once we receive updated dashboard models as
+// part of the interactive editing session.
 type ErrorNotSole struct {
 	name   string
 	file   string

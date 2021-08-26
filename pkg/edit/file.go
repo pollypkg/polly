@@ -9,9 +9,9 @@ import (
 	"github.com/pollypkg/polly/pkg/pop"
 )
 
-// File reports the file a value originates from.
+// File reports the file a dashboard originates from.
 // It expects values to originate from _exactly one_ file.
-// The polly schema is ignored
+// The polly schema is ignored in that assumption.
 func File(d pop.Dashboard) (string, error) {
 	v := d.Value()
 	split := v.Split()
@@ -54,6 +54,9 @@ func File(d pop.Dashboard) (string, error) {
 	return file, nil
 }
 
+// ErrMultipleFiles happens when the underlying cue.Value of the dashboard was
+// constructed from more than one non-schema file.
+// Schema files are determined using isSchema().
 type ErrMultipleFiles struct {
 	pos  []token.Pos
 	name string

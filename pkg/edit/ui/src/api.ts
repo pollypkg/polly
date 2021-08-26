@@ -1,34 +1,21 @@
-import axios from "axios";
+import {DashboardServiceClient} from "./proto/DashboardServiceClientPb"
+import {Error as GrpcError} from "grpc-web"
 
 /**
- * primary address of the backend api
+ * primary address of the backend grpc-web api
  */
 export const addr =
   process.env.NODE_ENV === "development"
-    ? "http://localhost:3333/api/v1"
-    : "/api/v1";
+    ? "http://localhost:3333/api"
+    : "/api";
 
-/**
- * DashboardMeta represents metadata information about a dashboard
- */
-export type DashboardMeta = {
-  title: string;
-  uid: string;
-  description?: string;
+export const dashboards = new DashboardServiceClient(addr)
 
-  file: string;
-  name: string;
-};
-
-/**
- * getDashboards fetches the list of dashboards the current Polly package has
- * @returns DashboardMeta[]
- */
-export async function getDashboards(): Promise<DashboardMeta[]> {
-  try {
-    const result = await axios.get(`${addr}/dashboards`);
-    return result.data;
-  } catch (error) {
-    throw error;
+export type Error = GrpcError | {}
+export const isError = (T: GrpcError | {}): T is GrpcError => {
+  if ((T as GrpcError).code) {
+    return true;
   }
-}
+
+  return false;
+};

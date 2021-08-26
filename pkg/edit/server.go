@@ -2,117 +2,74 @@ package edit
 
 import (
 	"context"
-	"encoding/json"
 	"log"
+	"net"
 	"net/http"
 
+	"github.com/improbable-eng/grpc-web/go/grpcweb"
 	"github.com/pollypkg/polly/pkg/coord"
+	"github.com/pollypkg/polly/pkg/edit/proto"
 	"github.com/pollypkg/polly/pkg/pop"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/reflection"
 )
 
-// Server provides edit operations over a HTTP interface
-type Server struct {
-	p pop.Pop
-
-	g *Grafana
-}
-
-// HTTPServer returns a http.Handler serving the primary api
-func HTTPServer(ctx context.Context, p pop.Pop, opts Opts) (http.Handler, error) {
-	g, err := Edit(p, opts)
+// HTTPHandler returns a http.Handler serving the primary gRPC-web API and
+// user-interface.
+func HTTPHandler(ctx context.Context, p pop.Pop, opts Opts) (http.Handler, error) {
+	e, err := Edit(p, opts)
 	if err != nil {
 		return nil, err
 	}
 
-	s := Server{
-		p: p,
-		g: g,
-	}
-
-	// cleanup once context canceled
+	dashSrv := &DashboardService{g: &e.Grafana}
 	coord.Finally(ctx, func() {
-		if err := s.Close(); err != nil {
+		if err := dashSrv.Close(); err != nil {
 			log.Println(err)
 		}
 	})
 
-	mux := http.NewServeMux()
-	mux.HandleFunc("/dashboards", s.Dashboards)
-	mux.HandleFunc("/edit", s.Edit)
+	// real grpc
+	grpcServer := grpc.NewServer()
+	proto.RegisterDashboardServiceServer(grpcServer, dashSrv)
+	reflection.Register(grpcServer)
 
-	// TODO: properly handle CORS
-	corsDisabled := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	// grpc-web
+	webServer := http.StripPrefix("/rpc/v1", grpcweb.WrapServer(grpcServer))
+
+	mux := http.NewServeMux()
+	mux.HandleFunc("/rpc/v1", func(w http.ResponseWriter, r *http.Request) {
+		// TODO: properly handle CORS
 		w.Header().Set("Access-Control-Allow-Origin", "*")
-		mux.ServeHTTP(w, r)
+		w.Header().Set("Access-Control-Allow-Headers", "*")
+		webServer.ServeHTTP(w, r)
 	})
 
-	return corsDisabled, nil
-}
-
-// DashboardMeta holds basic information about a Dashboard tailored towards
-// displaying in the UI
-type DashboardMeta struct {
-	File string `json:"file"`
-	Name string `json:"name"`
-
-	Title string `json:"title"`
-	UID   string `json:"uid"`
-	Desc  string `json:"desc"`
-}
-
-// List Dashbaords
-// GET /dashboards
-func (s Server) Dashboards(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodGet {
-		http.Error(w, "/dashboards only supports GET", http.StatusBadRequest)
-		return
+	srv := Server{
+		grpc: grpcServer,
+		http: mux,
 	}
 
-	meta := []DashboardMeta{}
-	for _, d := range s.p.Dashboards() {
-		var m DashboardMeta
-		if err := d.Value().Decode(&m); err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
+	return &srv, nil
+}
 
-		file, err := File(d)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
+// Server holds an implementation of the edit gRPC API.
+// It's ServeHTTP capabilities serve a grpc-web endpoint at /rcp/v1,
+// while the ListenGRPC method starts a regular gRPC Server.
+type Server struct {
+	grpc *grpc.Server
+	http *http.ServeMux
+}
 
-		m.Name = d.Name()
-		m.File = file
-		meta = append(meta, m)
-	}
+func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	s.http.ServeHTTP(w, r)
+}
 
-	data, err := json.Marshal(meta)
+func (s *Server) ListenGRPC(addr string) error {
+	lis, err := net.Listen("tcp", addr)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
+		return err
 	}
 
-	w.Write(data)
-}
-
-// Edit a dashboard
-// POST /edit?dashboard=<name>
-func (s Server) Edit(w http.ResponseWriter, r *http.Request) {
-	name := r.URL.Query().Get("dashboard")
-	if name == "" {
-		http.Error(w, "dashboard url parameter required", http.StatusBadRequest)
-		return
-	}
-
-	if err := s.g.Add(name); err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-	}
-
-	http.Redirect(w, r, "http://localhost:3000/d/"+s.g.EditUID(name), http.StatusTemporaryRedirect)
-}
-
-// Close the server and cleanup any leftovers
-func (s Server) Close() error {
-	return s.g.Close()
+	return s.grpc.Serve(lis)
 }

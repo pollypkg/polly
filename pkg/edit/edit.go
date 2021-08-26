@@ -17,11 +17,15 @@ import (
 	"github.com/pollypkg/polly/pkg/pop"
 )
 
+// Opts holds optional properties for Edit that either have sensible defaults or
+// are not generally required.
 type Opts struct {
 	Client *grafana.Client
 }
 
-func Edit(p pop.Pop, opts Opts) (*Grafana, error) {
+// Edit opens a new editing session on the given Polly package
+// Make sure to always close the returned Editor once done editing.
+func Edit(p pop.Pop, opts Opts) (*Editor, error) {
 	w, err := opts.Client.NewWatcher()
 	if err != nil {
 		return nil, err
@@ -35,9 +39,16 @@ func Edit(p pop.Pop, opts Opts) (*Grafana, error) {
 		watch:  w,
 	}
 
-	return &g, nil
+	return &Editor{Grafana: g}, nil
 }
 
+// Editor bundles editing capabilites
+type Editor struct {
+	Grafana Grafana
+}
+
+// Grafana edits Grafana dashboards.
+// This may be expanded in the future to other Grafana types
 type Grafana struct {
 	p pop.Pop
 
@@ -47,6 +58,9 @@ type Grafana struct {
 	watch *grafana.Watcher
 }
 
+// Add starts interactive editing for the dashboard pointed to by name:
+// - Create the dashboard using a temporary UID at the Grafana instance
+// - Subscribe to change events, write back to disk when those occur
 func (c Grafana) Add(name string) error {
 	if _, ok := c.inEdit[name]; ok {
 		return nil
@@ -73,7 +87,7 @@ func (c Grafana) Add(name string) error {
 	}
 
 	originalUID := i["uid"]
-	editUID := dashboardID(name)
+	editUID := genEditUID(name)
 	i["uid"] = editUID
 	i["id"] = nil
 
@@ -82,7 +96,7 @@ func (c Grafana) Add(name string) error {
 		Model: i,
 	})
 	if err != nil {
-		return err
+		return fmt.Errorf("Failed to create temporary dashboard '%s' in Grafana: %w", editUID, err)
 	}
 
 	c.inEdit[name] = editUID
@@ -91,7 +105,7 @@ func (c Grafana) Add(name string) error {
 		upd["uid"] = originalUID
 		delete(upd, "id")
 		delete(upd, "version")
-		trim(upd)
+		Trim(upd)
 
 		model := map[string]interface{}{
 			"grafanaDashboards": map[string]interface{}{
@@ -129,23 +143,32 @@ func (c Grafana) Add(name string) error {
 	return nil
 }
 
+// EditUID returns the uid of the current editing session of the dashboard
+// pointed to by name.
+// Returns the empty string if no edit is progress / the dashboard does not exist.
 func (c Grafana) EditUID(name string) string {
 	return c.inEdit[name]
 }
 
+// Close removes all temporary editing dashboards from the Grafana instance and
+// stops all update subscriptions.
 func (c Grafana) Close() error {
-	var outErr error
+	var lastErr error
 	for _, uid := range c.inEdit {
-		err := c.api.DeleteDashboardByUID(uid)
-		if outErr == nil {
-			outErr = err
+		if err := c.api.DeleteDashboardByUID(uid); err != nil {
+			lastErr = err
 		}
 	}
 
-	return outErr
+	if lastErr != nil {
+		return lastErr
+	}
+
+	return c.watch.Close()
 }
 
-func dashboardID(name string) string {
+// genEditUID generates a editing UID for the dashboard of given name
+func genEditUID(name string) string {
 	hostname, err := os.Hostname()
 	if err != nil {
 		panic(err)
@@ -164,6 +187,8 @@ func dashboardID(name string) string {
 	return id
 }
 
+// cuePackage returns the package used by file.
+// TODO: there must be a more efficient way for this (lexical analysis?)
 func cuePackage(file string) (string, error) {
 	inst := load.Instances([]string{file}, nil)
 	i := inst[0]
@@ -174,7 +199,10 @@ func cuePackage(file string) (string, error) {
 	return i.PkgName, nil
 }
 
-func trim(i interface{}) {
+// Trim removes unwanted fields from the dashboard model in-place.
+// TODO: merge with removing version, id, etc
+// TODO: use schema to trim defaults
+func Trim(i interface{}) {
 	switch i := i.(type) {
 	case map[string]interface{}:
 		for k, v := range i {
@@ -183,11 +211,11 @@ func trim(i interface{}) {
 				continue
 			}
 
-			trim(v)
+			Trim(v)
 		}
 	case []interface{}:
 		for _, v := range i {
-			trim(v)
+			Trim(v)
 		}
 	}
 }

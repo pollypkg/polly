@@ -41,7 +41,7 @@ func editCmd() *cli.Command {
 		}
 
 		grafanaURL := "http://localhost:3000"
-		grafanaToken := "eyJrIjoiRTJzVzZIS2RsNlhvSTJVNXlEWUM3RDNwa1JNanRQNjkiLCJuIjoidGVzdCIsImlkIjoxfQ=="
+		grafanaToken := "eyJrIjoiS25SZFd2VWtMeGZRZFpsM3U5N0x5YkN6bEpRN0lqaG0iLCJuIjoidGVzdCIsImlkIjoxfQ=="
 		c, err := grafana.New(grafanaURL, grafana.Auth{
 			Token: grafanaToken,
 		})
@@ -54,8 +54,7 @@ func editCmd() *cli.Command {
 			return err
 		}
 
-		http.Handle("/api/v1/", http.StripPrefix("/api/v1", srv))
-		go http.ListenAndServe(":3333", nil)
+		go http.ListenAndServe(":3333", srv)
 
 		<-sigCh
 		log.Println("Cleaning up ..")
