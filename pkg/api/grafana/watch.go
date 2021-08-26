@@ -11,15 +11,18 @@ import (
 	"github.com/pollypkg/polly/pkg/api/fuge"
 )
 
+// Watcher listens for dashboard change events and dispatches registered actions
+// when they happen
 type Watcher struct {
 	c *fuge.Fuge
-	e chan error
 
 	gapi *grafana.Client
 	subs map[string]*fuge.Sub
 	auth Auth
 }
 
+// NewWatcher returns a new watcher already connected to Grafana's centrifuge
+// API. Use Add() to subscribe to the actual dashboard change events.
 func (c *Client) NewWatcher() (*Watcher, error) {
 	i, err := c.Info()
 	if err != nil {
@@ -45,7 +48,6 @@ func (c *Client) NewWatcher() (*Watcher, error) {
 
 	w := Watcher{
 		c: f,
-		e: make(chan error),
 
 		gapi: c.gapi,
 		subs: make(map[string]*fuge.Sub),
@@ -54,8 +56,12 @@ func (c *Client) NewWatcher() (*Watcher, error) {
 	return &w, nil
 }
 
-type ChangeHandler func(map[string]interface{}) error
+// ChangeHandler is invoked when a dashboard change event occurs. It is passed
+// either the dashboard model, or an error that occured.
+type ChangeHandler func(map[string]interface{}, error)
 
+// Add susbcribes to change events for the dashboard of given UID and invokes
+// handler when those occur.
 func (w *Watcher) Add(uid string, handler ChangeHandler) error {
 	channel := fmt.Sprintf("%d/grafana/dashboard/uid/%s", w.auth.OrgID, uid)
 	onPub := func(s *centrifuge.Subscription, e centrifuge.PublishEvent) {
@@ -66,20 +72,17 @@ func (w *Watcher) Add(uid string, handler ChangeHandler) error {
 		}
 
 		if err := json.Unmarshal(e.Data, &event); err != nil {
-			w.e <- err
+			handler(nil, err)
 			return
 		}
 
 		d, err := w.gapi.DashboardByUID(uid)
 		if err != nil {
-			w.e <- err
+			handler(nil, err)
 			return
 		}
 
-		if err := handler(d.Model); err != nil {
-			w.e <- err
-			return
-		}
+		handler(d.Model, nil)
 	}
 
 	s, err := w.c.Sub(channel, onPub)
@@ -91,6 +94,7 @@ func (w *Watcher) Add(uid string, handler ChangeHandler) error {
 	return nil
 }
 
+// Del removes the subscription for the dashboard of given UID if there is one.
 func (w *Watcher) Del(uid string) {
 	s, ok := w.subs[uid]
 	if !ok {
@@ -99,10 +103,6 @@ func (w *Watcher) Del(uid string) {
 
 	s.Close()
 	delete(w.subs, uid)
-}
-
-func (w *Watcher) Err() error {
-	return <-w.e
 }
 
 func (w *Watcher) Close() error {

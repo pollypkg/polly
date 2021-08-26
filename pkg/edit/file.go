@@ -78,6 +78,6 @@ func (e ErrMultipleFiles) Error() string {
 }
 
 func isSchema(f string) bool {
-	// TODO: this is a very naive and weak assumption. find a better one
+	// TODO(sh0rez): this is a very naive and weak assumption. find a better one
 	return strings.HasSuffix(filepath.ToSlash(f), "polly/schema/pollypkg.cue")
 }

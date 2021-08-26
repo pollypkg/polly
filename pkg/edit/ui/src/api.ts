@@ -6,8 +6,8 @@ import {Error as GrpcError} from "grpc-web"
  */
 export const addr =
   process.env.NODE_ENV === "development"
-    ? "http://localhost:3333/api"
-    : "/api";
+    ? "http://localhost:3333/rpc/v1"
+    : "/rpc/v1";
 
 export const dashboards = new DashboardServiceClient(addr)
 

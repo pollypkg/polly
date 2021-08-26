@@ -40,8 +40,15 @@ func editCmd() *cli.Command {
 			return err
 		}
 
-		grafanaURL := "http://localhost:3000"
-		grafanaToken := "eyJrIjoiS25SZFd2VWtMeGZRZFpsM3U5N0x5YkN6bEpRN0lqaG0iLCJuIjoidGVzdCIsImlkIjoxfQ=="
+		grafanaURL := os.Getenv("GRAFANA_URL")
+		if grafanaURL == "" {
+			return fmt.Errorf("GRAFANA_URL must be set")
+		}
+		grafanaToken := os.Getenv("GRAFANA_TOKEN")
+		if grafanaToken == "" {
+			return fmt.Errorf("GRAFANA_URL must be set")
+		}
+
 		c, err := grafana.New(grafanaURL, grafana.Auth{
 			Token: grafanaToken,
 		})
@@ -49,7 +56,7 @@ func editCmd() *cli.Command {
 			return err
 		}
 
-		srv, err := edit.HTTPServer(ctx, *p, edit.Opts{Client: c})
+		srv, err := edit.HTTPHandler(ctx, *p, edit.Opts{Client: c})
 		if err != nil {
 			return err
 		}

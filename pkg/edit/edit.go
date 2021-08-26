@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"os"
 	"strings"
 
@@ -86,22 +87,25 @@ func (c Grafana) Add(name string) error {
 		return err
 	}
 
+	// TODO(sh0rez): this is hacky, better formalize (also the undoing below)
 	originalUID := i["uid"]
 	editUID := genEditUID(name)
 	i["uid"] = editUID
 	i["id"] = nil
 
 	_ = c.api.DeleteDashboardByUID(editUID)
-	_, err = c.api.NewDashboard(gapi.Dashboard{
-		Model: i,
-	})
-	if err != nil {
+	if _, err = c.api.NewDashboard(gapi.Dashboard{Model: i}); err != nil {
 		return fmt.Errorf("Failed to create temporary dashboard '%s' in Grafana: %w", editUID, err)
 	}
 
 	c.inEdit[name] = editUID
 
-	err = c.watch.Add(editUID, func(upd map[string]interface{}) error {
+	err = c.watch.Add(editUID, func(upd map[string]interface{}, err error) {
+		if err != nil {
+			log.Printf("Error: Failed receiving update event for '%s': %s", editUID, err)
+			return
+		}
+
 		upd["uid"] = originalUID
 		delete(upd, "id")
 		delete(upd, "version")
@@ -117,6 +121,8 @@ func (c Grafana) Add(name string) error {
 
 		data, err := json.MarshalIndent(model, "", "  ")
 		if err != nil {
+			// failure here suggests programming mistakes, as model must be
+			// serializable
 			panic(err)
 		}
 
@@ -126,21 +132,16 @@ func (c Grafana) Add(name string) error {
 
 		fmted, err := format.Source([]byte(pkged), format.Simplify())
 		if err != nil {
+			// must not fail, as JSON is valid CUE by definition
 			panic(err)
 		}
 
 		if err := ioutil.WriteFile(file, fmted, 0744); err != nil {
-			panic(err)
+			log.Printf("Error: Failed to write updated '%s' to disk: %s", file, err)
 		}
-
-		return nil
 	})
 
-	if err != nil {
-		return err
-	}
-
-	return nil
+	return err
 }
 
 // EditUID returns the uid of the current editing session of the dashboard
@@ -200,7 +201,7 @@ func cuePackage(file string) (string, error) {
 }
 
 // Trim removes unwanted fields from the dashboard model in-place.
-// TODO: merge with removing version, id, etc
+// TODO(sh0rez): merge with removing version, id, etc
 // TODO: use schema to trim defaults
 func Trim(i interface{}) {
 	switch i := i.(type) {

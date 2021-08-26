@@ -1,3 +1,6 @@
+// package fuge wraps the centrifuge API to make using it more natural in Go:
+// - func values instead of full types
+// - forced synchronization when connecting and subscribing (and thus error return values)
 package fuge
 
 import (

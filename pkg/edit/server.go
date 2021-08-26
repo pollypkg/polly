@@ -38,7 +38,7 @@ func HTTPHandler(ctx context.Context, p pop.Pop, opts Opts) (http.Handler, error
 	webServer := http.StripPrefix("/rpc/v1", grpcweb.WrapServer(grpcServer))
 
 	mux := http.NewServeMux()
-	mux.HandleFunc("/rpc/v1", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("/rpc/v1/", func(w http.ResponseWriter, r *http.Request) {
 		// TODO: properly handle CORS
 		w.Header().Set("Access-Control-Allow-Origin", "*")
 		w.Header().Set("Access-Control-Allow-Headers", "*")
