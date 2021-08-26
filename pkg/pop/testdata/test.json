@@ -1,0 +1,25 @@
+{
+  "grafanaDashboards": {
+    "Empty.json": "{\n  \"annotations\": {\n    \"list\": [\n      {\n        \"builtIn\": 1,\n        \"datasource\": \"-- Grafana --\",\n        \"enable\": true,\n        \"hide\": true,\n        \"iconColor\": \"rgba(0, 211, 255, 1)\",\n        \"name\": \"Annotations \\u0026 Alerts\",\n        \"target\": {\n          \"limit\": 100,\n          \"matchAny\": false,\n          \"tags\": [],\n          \"type\": \"dashboard\"\n        },\n        \"type\": \"dashboard\",\n        \"showIn\": 0\n      }\n    ]\n  },\n  \"editable\": true,\n  \"graphTooltip\": 0,\n  \"links\": [],\n  \"panels\": [],\n  \"schemaVersion\": 30,\n  \"style\": \"dark\",\n  \"tags\": [],\n  \"templating\": {\n    \"list\": []\n  },\n  \"time\": {\n    \"from\": \"now-6h\",\n    \"to\": \"now\"\n  },\n  \"timepicker\": {\n    \"collapse\": false,\n    \"enable\": true,\n    \"hidden\": false,\n    \"refresh_intervals\": [\n      \"5s\",\n      \"10s\",\n      \"30s\",\n      \"1m\",\n      \"5m\",\n      \"15m\",\n      \"30m\",\n      \"1h\",\n      \"2h\",\n      \"1d\"\n    ]\n  },\n  \"title\": \"Empty\",\n  \"version\": 0\n}"
+  },
+  "prometheusRules": [],
+  "prometheusAlerts": [
+    {
+      "name": "certificates",
+      "rules": [
+        {
+          "alert": "ExpirySoon",
+          "annotations": {
+            "description": "The domain that this cert covers will be unavailable after {{ $value | humanizeDuration }}. Clients using endpoints that this cert protects will start to fail in {{ $value | humanizeDuration }}.",
+            "summary": "The cert`{{ $labels.name }}` is {{ $value | humanizeDuration }} from expiry, it should have renewed over a week ago."
+          },
+          "expr": "  (avg by (exported_namespace, namespace, name) (expiration_timestamp_seconds - time()))\n\u003c (10 * 24 * 3600)",
+          "for": "1h",
+          "labels": {
+            "severity": "warning"
+          }
+        }
+      ]
+    }
+  ]
+}

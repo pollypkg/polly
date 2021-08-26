@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+option go_package = "github.com/pollypkg/polly/pkg/edit/proto";
+
+// Dashboard metadata for UI displaying purposes
+message DashboardMeta {
+    string file = 1;
+    string name = 2;
+
+    string title = 3;
+    string uid = 4;
+    string desc = 5;
+}
+
+// Listing all known dashboards of the pop
+message ListDashboardsRequest {}
+message ListDashboardResponse { repeated DashboardMeta dashboards = 1; }
+
+// Start an editing session for a specific dashboard
+message EditDashboardRequest { string name = 1; }
+message EditDashboardResponse { string editURL = 1; }
+
+service DashboardService {
+    rpc List(ListDashboardsRequest) returns (ListDashboardResponse) {}
+    rpc Edit(EditDashboardRequest) returns (EditDashboardResponse) {}
+}
