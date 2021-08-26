@@ -80,9 +80,10 @@ PollyPackage: {
 	//
 	// @doc(metaschema)
 	prometheusRules: {
-		v0: [string]: {
+		v0: [ID=string]: {
 			group: string
 			rule: (_latest & {arg: prometheus.Rule.lineages[0]}).out & {
+				record: ID
 			}
 		}
 	}

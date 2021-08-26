@@ -21,7 +21,7 @@ mixin: {
 }
 
 #ruleConvert: {
-    #rules: [string]: {group: string, alert: {...}, ...}
+    #rules: [string]: {group: string, ...}
 
     [for n, r in (#flattenAlerts & {arg: #rules}).out {
         name: n, rules: r
@@ -37,11 +37,12 @@ mixin: {
 }
 
 #flattenAlerts: {
-    arg: [string]: { group: string, alert: {...} }
+    arg: [string]: { group: string, alert: {...}, rule: {...} }
     out: [string]: [...]
     _inter: [string]: [string]: {...}
     for n, v in arg {
         _inter: "\(v.group)": "\(n)": v.alert
+        _inter: "\(v.group)": "\(n)": v.rule
     }
     for g, a in _inter {
         out: "\(g)": [ for v in a {v}, ...]
