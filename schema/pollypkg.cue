@@ -68,6 +68,9 @@ PollyPackage: {
 	// @doc(metaschema)
 	prometheusAlerts: {
 		v0: [Name=string]: {
+			// Each value contained in explodeArgs is expected to result in the
+			// creation of a single alert.
+			explodeArgs?: {...}
 			group: string
 			alert: (_latest & {arg: prometheus.Alert.lineages[0]}).out & {
 				alert: Name
