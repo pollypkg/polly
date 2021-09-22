@@ -14,28 +14,15 @@
 
 package grafanaschema
 
-import (
-    ui "github.com/grafana/grafana/packages/grafana-schema/src/schema"
-)
-
 Panel: {
     lineages: [
         [
             {
                 PanelOptions: {
-                    frameIndex: number | *0
-                    showHeader: bool | *true
-                    showTypeIcons: bool | *false
-                    sortBy?: [...ui.TableSortByFieldState]
+                    // anything for now
+                    ...
                 }
-                PanelFieldConfig: {
-                    width?: int
-                    minWidth?: int
-                    align?: string | *"auto"
-                    displayMode?: string | *"auto" // TODO? TableCellDisplayMode
-                    filterable?: bool
-                }
-            },
+            }
         ]
     ]
     migrations: []
